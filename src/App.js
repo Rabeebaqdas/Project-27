@@ -2,146 +2,76 @@ import React, { useEffect, useState } from "react";
 import './App.css';
 
 function App() {
-  const [count, setCount] = useState({
-    count1: false,
-    count2: false,
-    count3: false,
-    count4: false,
-    count5: false,
-    count6: false,
-    count7: false,
-    count8: false,
-  })
- 
-  const handleChange = (e) => {
-    
-    if(e.target.id == "div1"){
-      setCount({
-        count1: !count.count1,
-      })
-  
-    }
-    if (e.target.id == "div2") {
-      setCount({
-        count1: true,
-        count2: !count.count2,
-      })
-    }
-    if (e.target.id == "div3") {
-      setCount({
-        count1: true,
-        count2: true,
-        count3: !count.count3
-      })
-    }
-    if (e.target.id == "div4") {
-      setCount({
-        count1: true,
-        count2: true,
-        count3: true,
-        count4: !count.count4
-      })
-    }
-    if (e.target.id == "div5") {
-      setCount({
+  const [count,setCount] = useState({count:0});
 
-        count1: true,
-        count2: true,
-        count3: true,
-        count4: true,
-        count5: !count.count5
-      })
-    }
-    if (e.target.id == "div6") {
+  const handleLeft = () => {
+    if(count.count == 0 ){
       setCount({
-        count1: true,
-        count2: true,
-        count3: true,
-        count4: true,
-        count5: true,
-        count6: !count.count6
+        count:3
       })
+      return;
     }
-    if (e.target.id == "div7") {
+
+    setCount({
+      count:count.count-1
+    })
+ 
+  }
+
+  const handleRight = () => {
+
+    if(count.count == 3 ){
       setCount({
-        count1: true,
-        count2: true,
-        count3: true,
-        count4: true,
-        count5: true,
-        count6: true,
-        count7: !count.count7
+        count:0
       })
+      return;
     }
-    if (e.target.id == "div8") {
-      setCount({
-        count1: true,
-        count2: true,
-        count3: true,
-        count4: true,
-        count5: true,
-        count6: true,
-        count7: true,
-        count8: !count.count8
-      })
-    }
+    setCount({
+      count:count.count+1
+    })
+ 
+   
   }
 
   useEffect(()=>{
-    const handleBig = () => {
-     const fullCups = document.querySelectorAll('.cup-small.full').length;
-     const samllCups = document.querySelectorAll(".cup-small").length;
-     const remained = document.getElementById('remained');
-     const liters = document.getElementById("liters");
-   const percentage = document.getElementById("percentage");
-      if(fullCups === 0) {
-        percentage.style.visibility = "hidden"
-        percentage.style.height = 0
-      }else{
-        percentage.style.visibility = "visible"
-        percentage.style.height = `${fullCups / samllCups * 330}px`
-        percentage.innerText =  `${fullCups / samllCups * 100}%`
-      }
-      if(fullCups === samllCups) {
-        remained.style.visibility = "hidden"
-        remained.style.height = 0
-      }else{
-        remained.style.visibility = "visible"
-        liters.innerText = `${2 - (250 * fullCups) /1000}L`
-      }
-
+    const body = document.body;
+    const slides = document.querySelectorAll('.slide')
+    const bg = () =>{
+      body.style.backgroundImage = slides[count.count].style.backgroundImage;
     }
-    handleBig()
-  })
+    bg();
 
+  },[count.count])
+
+ 
 
   return (
-
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <h1>Drink water</h1>
-      <h3>Goal: 2 liters</h3>
-      <div className="cup">
-        <div className="remained" id="remained">
-          <span id="liters"></span>
-          <small>Remained</small>
-        </div>
-        <div className="percentage" id="percentage"></div>
+    <>
+      <div className="slider-container">
+        <div
+          className={`slide ${count.count==0 ? "active" : ""}`}
+          style={{ backgroundImage: `url(https://images.unsplash.com/photo-1649004542972-9a70c13d875f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=963&q=80)` }}
+        ></div>
+        <div
+          className={`slide ${count.count==1 ? "active" : ""}`}
+          style={{ backgroundImage: `url(https://images.unsplash.com/photo-1649011525614-6a97c8f8889e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80)` }}
+        ></div>
+        <div
+          className={`slide ${count.count==2 ? "active" : ""}`}
+          style={{ backgroundImage: `url(https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80)` }}
+        ></div>
+        <div
+          className={`slide ${count.count==3 ? "active" : ""}`}
+          style={{ backgroundImage: `url(https://images.unsplash.com/photo-1648737154547-b0dfd281c51e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80)` }}
+        ></div>
+        <button className="arrow left-arrow" id="left" onClick={handleLeft}>
+            <i className="fas fa-arrow-left"></i>
+        </button>
+        <button className="arrow right-arrow" id="right" onClick={handleRight}>
+            <i className="fas fa-arrow-right"></i>
+        </button>
       </div>
-
-      <p className="text">Select how many glasses of water that you have drank</p>
-
-      <div className="cups">
-        <div className={`cup cup-small ${count.count1 ? "full" : ""}`} id="div1" onClick={(e) => handleChange(e)}>250 ml</div>
-        <div className={`cup cup-small ${count.count2 ? "full" : ""}`} id="div2" onClick={(e) => handleChange(e)}>250 ml</div>
-        <div className={`cup cup-small ${count.count3 ? "full" : ""}`} id="div3" onClick={(e) => handleChange(e)}>250 ml</div>
-        <div className={`cup cup-small ${count.count4 ? "full" : ""}`} id="div4" onClick={(e) => handleChange(e)}>250 ml</div>
-        <div className={`cup cup-small ${count.count5 ? "full" : ""}`} id="div5" onClick={(e) => handleChange(e)}>250 ml</div>
-        <div className={`cup cup-small ${count.count6 ? "full" : ""}`} id="div6" onClick={(e) => handleChange(e)}>250 ml</div>
-        <div className={`cup cup-small ${count.count7 ? "full" : ""}`} id="div7" onClick={(e) => handleChange(e)}>250 ml</div>
-        <div className={`cup cup-small ${count.count8 ? "full" : ""}`} id="div8" onClick={(e) => handleChange(e)}>250 ml</div>
-
-      </div>
-    </div>
+    </>
   );
 }
 
