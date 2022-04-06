@@ -1,30 +1,63 @@
-import React, { useEffect} from "react";
+import React, { useEffect,useState} from "react";
+
 import './App.css';
 
 function App() {
-const btn = document.getElementById("btn")
-  function handleChange (e) {
-    const x = e.clientX;
-    const y = e.clientY;
-    const buttonTop = e.target.offsetTop;
-    const buttonLeft = e.target.offsetLeft;
-    const xInside = x -buttonLeft;
-    const yInside = y - buttonTop;
-    const circle = document.createElement('span')
-    circle.classList.add('circle')
-    circle.style.top = yInside + 'px';
-    circle.style.left = xInside + 'px';
-   btn && btn.appendChild(circle);
-    setTimeout(()=>circle.remove(),500);
-   }
 
+  useEffect(()=>{
+    const fill = document.querySelector('.fill');
+    const empties = document.querySelectorAll('.empty');
+   
+    
+    function dragStart() {
+      fill.className += " hold"
+      setTimeout(()=>fill.className = "invisible",0)
 
+    }
+  
+    function dragEnd() {
+  fill.className = 'fill'
+    }
+  
+    function dragOver(e) {
+      e.preventDefault()
+  
+    }
+    function dragEnter(e) {
+      e.preventDefault()
+      this.className += " hovered"
+    }
+    function dragLeave() {
+      this.className = "empty"
+    }
+    function dragDrop() {
+      empties.className = 'empty';
+     this.append(fill)
+    }
+  
+    fill.addEventListener('dragstart',dragStart)
+    fill.addEventListener("dragend",dragEnd)
+    for(const empty of empties) {
+      empty.addEventListener("dragover",dragOver)
+      empty.addEventListener("dragenter",dragEnter)
+      empty.addEventListener("dragleave",dragLeave)
+      empty.addEventListener("drop",dragDrop)
+    }
 
+  },[])
+  
+  
   return (
-    <>
-        <button id="btn" onClick={handleChange}>Click me </button>
-
-</>
+    <div className="main">
+    <div className="empty">
+        <div className="fill" draggable="true">
+        </div>
+    </div>
+  <div className="empty" ></div>
+  <div className="empty" ></div>
+  <div className="empty" ></div>
+  <div className="empty" ></div>
+</div>
   );
 }
 
