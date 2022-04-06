@@ -1,63 +1,71 @@
-import React, { useEffect,useState} from "react";
+import React, { useEffect,useState,useRef} from "react";
 
 import './App.css';
 
 function App() {
+  const canvasRef = useRef(null);
+  const contextRef = useRef(null);
+  const [isDraw,setDraw] = useState(false);
+  const [color,setColor] = useState();
+  const [count,setCount] = useState(0);
 
-  useEffect(()=>{
-    const fill = document.querySelector('.fill');
-    const empties = document.querySelectorAll('.empty');
-   
-    
-    function dragStart() {
-      fill.className += " hold"
-      setTimeout(()=>fill.className = "invisible",0)
+useEffect(()=>{
+  if(count <= 0) {
+    setCount(1)
+  }
+  const canvas = canvasRef.current;
+  const context = canvas.getContext('2d');
+  context.scale =(2,2)
+  context.strokeStyle = `${color}`
+  context.lineWidth = count;
+  contextRef.current = context;
+ 
 
-    }
-  
-    function dragEnd() {
-  fill.className = 'fill'
-    }
-  
-    function dragOver(e) {
-      e.preventDefault()
-  
-    }
-    function dragEnter(e) {
-      e.preventDefault()
-      this.className += " hovered"
-    }
-    function dragLeave() {
-      this.className = "empty"
-    }
-    function dragDrop() {
-      empties.className = 'empty';
-     this.append(fill)
-    }
-  
-    fill.addEventListener('dragstart',dragStart)
-    fill.addEventListener("dragend",dragEnd)
-    for(const empty of empties) {
-      empty.addEventListener("dragover",dragOver)
-      empty.addEventListener("dragenter",dragEnter)
-      empty.addEventListener("dragleave",dragLeave)
-      empty.addEventListener("drop",dragDrop)
-    }
+},[count,color])
 
-  },[])
+
+
+const startDrawing = ({nativeEvent})=> {
+const {offsetX,offsetY} = nativeEvent;
+contextRef.current.beginPath();
+contextRef.current.moveTo(offsetX,offsetY);
+setDraw(true);
+}
+
+
+const finishDrawing = ()  => {
+  contextRef.current.closePath();
+  setDraw(false);
+}
+
+const draw = ({nativeEvent}) => {
   
+  if(!isDraw){
+    return
+  }
+  const {offsetX,offsetY} = nativeEvent;
+  contextRef.current.lineTo(offsetX,offsetY);
+  contextRef.current.stroke()
+}
   
+const clear = () => {
+  contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+}
+
+
+
+
   return (
-    <div className="main">
-    <div className="empty">
-        <div className="fill" draggable="true">
-        </div>
-    </div>
-  <div className="empty" ></div>
-  <div className="empty" ></div>
-  <div className="empty" ></div>
-  <div className="empty" ></div>
-</div>
+ <>
+    <canvas width="800" height="460" ref={canvasRef} onMouseDown={startDrawing} onMouseUp={finishDrawing} onMouseMove={draw} ></canvas>
+   <div className="toolbox">
+       <button id="decrease" onClick={()=>setCount(count-1)}>-</button>
+       <span id="size">{count}</span>
+       <button id="increase" onClick={()=>setCount(count+1)}>+</button>
+       <input type="color" onChange={(e)=>setColor(e.target.value)} />
+       <button id="clear" onClick={clear}>X</button>
+   </div>
+   </>
   );
 }
 
