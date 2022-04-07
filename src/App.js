@@ -1,56 +1,88 @@
-import React,{useEffect,useRef} from "react";
+import React, { useEffect, useRef } from "react";
 
 
 import './App.css';
 
 function App() {
-const navBar = useRef(null);
+  const sliderContainer = useRef(null);
+  const slideRight = useRef(null);
+  const slideLeft = useRef(null);
+  const upButton = useRef(null);
+  const downButton = useRef(null);
+  const slidesLength = 4;
+  let activeSlideIndex = 0;
 
-useEffect(()=>{
+  useEffect(()=>{
 
-  const nav = navBar.current;
-  
-  const fixNav = () => {
-    if(window.scrollY > nav.offsetHeight){
-      nav.classList.add("active");
+    slideLeft.current.style.top = `-${(slidesLength - 1) * 100}vh`;
+  },[])
+
+  const changeSlide = (direction) => {
+    const sliderHeight = sliderContainer.current.clientHeight;
+    if(direction == "up") {
+      activeSlideIndex++;
+      if(activeSlideIndex > slidesLength - 1) {
+        activeSlideIndex = 0;
+
+      }
     }
-    else{
-      nav.classList.remove("active")
+    else if(direction == "down"){
+      activeSlideIndex--;
+      if(activeSlideIndex < 0) {
+        activeSlideIndex = slidesLength - 1;
+
+      }
     }
+    slideRight.current.style.transform = `translateY(-${activeSlideIndex * sliderHeight}px)`;
+    slideLeft.current.style.transform = `translateY(${activeSlideIndex * sliderHeight}px)`;
   }
-  
-  window.addEventListener("scroll",fixNav);
-},[])
 
   return (
-    <div>
-        <nav className='nav' ref={navBar}>
-            <div className="container">
-                <h1 className="logo">
-                    <a href="./App.jsx">My Website</a>
-                </h1>
-                <ul>
-                    <li><a href="#" className='current'>Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-        </nav>
-        <div className="hero">
-            <div className="container">
-                <h1>Welcome to my Website</h1>
-                <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur, eum.</p>
 
-            </div>
+    <div className="slider-container" ref={sliderContainer}>
+      <div className="left-slide" ref={slideLeft}>
+        <div style={{ backgroundColor: '#FD3555' }} >
+          <h1>Nature Flower</h1>
+          <p>all in pink</p>
         </div>
-        <section className="container content">
-            <h2>Content One</h2>   
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis.Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis,Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis,Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis,Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis,Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis,Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis.</p> 
-            <h3>Content Two</h3>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorem voluptatum molestiae eaque illo aliquam, illum neque dolor, doloremque, voluptate voluptatem recusandae culpa accusamus exercitationem! Nihil quis perferendis officia? Optio, iure.</p>
-        </section>
+        <div style={{ backgroundColor: '#2A68BA' }}>
+          <h1>Blue Sky </h1>
+          <p>With it's mountains</p>
+        </div>
+        <div style={{ backgroundColor: '#252E33' }}>
+          <h1>Lonely Castle</h1>
+          <p>in the wilderness</p>
+        </div>
+        <div style={{ backgroundColor: '#FFB866' }}>
+          <h1>Flying Eagle</h1>
+          <p>in the sunset</p>
+        </div>
+      </div>
+      <div className="right-slide" ref={slideRight}>
+        <div
+          style={{ backgroundImage: `url("https://images.unsplash.com/photo-1516584791719-a25cd9203e07?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=957&q=80")` }}
+        >
+        </div>
+        <div style={{ backgroundImage: `url("https://images.unsplash.com/photo-1456072212651-c507cb43b26f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80")` }}
+        >
+        </div>
+        <div style={{ backgroundImage: `url("https://images.unsplash.com/photo-1508893269700-a6c62c0610a2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=873&q=80")` }}>
+        </div>
+        <div style={{ backgroundImage: `url("https://images.unsplash.com/photo-1436891436013-5965265af5fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80")` }}>
+        </div>
+
+      </div>
+      <div className="action-buttons">
+        <button className="down-button" onClick={()=>changeSlide("down")}  ref={downButton}>
+          <i className="fas fa-arrow-down"></i>
+        </button>
+        <button className="up-button" onClick={()=>changeSlide("up")} ref={upButton}>
+          <i className="fas fa-arrow-up"></i>
+        </button>
+      </div>
+
     </div>
+
   );
 }
 
