@@ -1,47 +1,56 @@
-import React from "react";
+import React,{useEffect,useRef} from "react";
+
 
 import './App.css';
 
 function App() {
+const navBar = useRef(null);
 
+useEffect(()=>{
 
+  const nav = navBar.current;
+  
+  const fixNav = () => {
+    if(window.scrollY > nav.offsetHeight){
+      nav.classList.add("active");
+    }
+    else{
+      nav.classList.remove("active")
+    }
+  }
+  
+  window.addEventListener("scroll",fixNav);
+},[])
 
   return (
-    <div className="card">
-    <div className="card-header animated-bg" id="header">
-        <img src="https://images.unsplash.com/photo-1648659170064-d7f71d924fae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=813&q=80"/>
-    </div>
-    <div className="card-content">
-        <h3 className="card-title animated-bg animated-bg-text" id='title'>
-            Lorem ipsum dolor sit amet.
-        </h3>
-        <p className="card-excerpt" id="excerpt">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur, ullam!
-            <span className="animated-bg animated-bg-text">
-                &nbsp;
-            </span>
-            <span className="animated-bg animated-bg-text">
-                &nbsp;
-            </span>
-            <span className="animated-bg animated-bg-text">
-                &nbsp;
-            </span>
-        </p>
-        <div className="author">
-            <div className="profile-img animated-bg" id="profile_img">
-                <img src="https://images.unsplash.com/photo-1648786220970-bde7e3d2fe22?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=465&q=80" alt="" />
+    <div>
+        <nav className='nav' ref={navBar}>
+            <div className="container">
+                <h1 className="logo">
+                    <a href="./App.jsx">My Website</a>
+                </h1>
+                <ul>
+                    <li><a href="#" className='current'>Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
             </div>
-            <div className="author-info">
-                 <strong className="animated-bg animated-bg-text" id='name'>
-                        Alexa white
-                 </strong>
-                 <small className="animated-bg animated-bg-text" id="date">
-                     Oct 08, 2022 
-                 </small>
+        </nav>
+        <div className="hero">
+            <div className="container">
+                <h1>Welcome to my Website</h1>
+                <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur, eum.</p>
+
             </div>
         </div>
+        <section className="container content">
+            <h2>Content One</h2>   
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis.Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis,Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis,Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis,Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis,Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis,Cumque doloremque exercitationem debitis ducimus numquam a quod illo repudiandae quidem, nostrum dolore reprehenderit illum nobis maiores, beatae aliquam animi necessitatibus facilis.</p> 
+            <h3>Content Two</h3>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorem voluptatum molestiae eaque illo aliquam, illum neque dolor, doloremque, voluptate voluptatem recusandae culpa accusamus exercitationem! Nihil quis perferendis officia? Optio, iure.</p>
+        </section>
     </div>
-  </div>
   );
 }
 
