@@ -5,7 +5,7 @@ import React,{useRef} from 'react';
 
 function App() {
 
-  const button = useRef(null);
+
   const toasts = useRef(null);
 
   const messages = [
@@ -44,7 +44,7 @@ const getRandomType = () => {
     <div>
         <div id="toasts" ref={toasts}>
         </div>
-        <button className="btn" id="button" ref={button} onClick={()=>createNotification()}>Show Notification</button>
+        <button className="btn" onClick={()=>createNotification()}>Show Notification</button>
     </div>
   )
 }
