@@ -1,90 +1,137 @@
-import React, { useEffect, useRef } from "react";
-
-
 import './App.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'
+
 
 function App() {
-  const sliderContainer = useRef(null);
-  const slideRight = useRef(null);
-  const slideLeft = useRef(null);
-  const upButton = useRef(null);
-  const downButton = useRef(null);
-  const slidesLength = 4;
-  let activeSlideIndex = 0;
 
-  useEffect(()=>{
+  const [apiData, setapiData] = useState();
+  const [filterapi, setfilterapi] = useState();
+  const [state, setState] = useState({
+    value: '',
+    show: ''
+  });
 
-    slideLeft.current.style.top = `-${(slidesLength - 1) * 100}vh`;
-  },[])
 
-  const changeSlide = (direction) => {
-    const sliderHeight = sliderContainer.current.clientHeight;
-    if(direction == "up") {
-      activeSlideIndex++;
-      if(activeSlideIndex > slidesLength - 1) {
-        activeSlideIndex = 0;
-
-      }
-    }
-    else if(direction == "down"){
-      activeSlideIndex--;
-      if(activeSlideIndex < 0) {
-        activeSlideIndex = slidesLength - 1;
-
-      }
-    }
-    slideRight.current.style.transform = `translateY(-${activeSlideIndex * sliderHeight}px)`;
-    slideLeft.current.style.transform = `translateY(${activeSlideIndex * sliderHeight}px)`;
+  const handleChange = (e) => {
+    setState({ value: e.target.value })
   }
 
+  const submit = (e) => {
+    e.preventDefault()
+    setState({ show: state.value })
+    console.log(state.value)
+
+  }
+
+
+  const Image_path = 'https://image.tmdb.org/t/p/w1280';
+  const SEARCH_URL = 'https://api.themoviedb.org/3/search/movie?api_key=fbffc89359898a66e6ba200f3e92b611&query="';
+
+  useEffect(() => {
+
+    const getProducts = async () => {
+      try {
+      
+        const res = await axios.get("https://api.themoviedb.org/3/discover/movie?sort_bypopularity.desc&api_key=fbffc89359898a66e6ba200f3e92b611");
+        setapiData(res.data)
+      
+      
+      }
+      catch (err) {
+        console.log(err)
+      }
+    };
+    getProducts();
+  }, [])
+
+  useEffect(() => {
+
+    const filteredProduct = async () => {
+      try {
+      
+        const res = await axios.get(SEARCH_URL + state.show);
+  
+        setfilterapi(res.data)
+      }
+      catch (err) {
+        console.log(err)
+      }
+    };
+    filteredProduct();
+  }, [state.show])
+
+
   return (
+    <>
+      <header>
+        <form id="form">
+          <input type="search" id="search" className='search' placeholder='search' value={state.value} onChange={(e) => handleChange(e)} />
+          <button type="submit" onClick={(e) => submit(e)}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+            </svg>
+          </button>
+        </form>
+      </header>
+      <main id="main">
 
-    <div className="slider-container" ref={sliderContainer}>
-      <div className="left-slide" ref={slideLeft}>
-        <div style={{ backgroundColor: '#FD3555' }} >
-          <h1>Nature Flower</h1>
-          <p>all in pink</p>
-        </div>
-        <div style={{ backgroundColor: '#2A68BA' }}>
-          <h1>Blue Sky </h1>
-          <p>With it's mountains</p>
-        </div>
-        <div style={{ backgroundColor: '#252E33' }}>
-          <h1>Lonely Castle</h1>
-          <p>in the wilderness</p>
-        </div>
-        <div style={{ backgroundColor: '#FFB866' }}>
-          <h1>Flying Eagle</h1>
-          <p>in the sunset</p>
-        </div>
-      </div>
-      <div className="right-slide" ref={slideRight}>
-        <div
-          style={{ backgroundImage: `url("https://images.unsplash.com/photo-1516584791719-a25cd9203e07?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=957&q=80")` }}
-        >
-        </div>
-        <div style={{ backgroundImage: `url("https://images.unsplash.com/photo-1456072212651-c507cb43b26f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80")` }}
-        >
-        </div>
-        <div style={{ backgroundImage: `url("https://images.unsplash.com/photo-1508893269700-a6c62c0610a2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=873&q=80")` }}>
-        </div>
-        <div style={{ backgroundImage: `url("https://images.unsplash.com/photo-1436891436013-5965265af5fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80")` }}>
-        </div>
+        {
+          state.show && filterapi.results != null ?
+            filterapi
+              ?
+              filterapi.results.map((apiObj) => {
+      
+                return (
+                  <div className="movie">
+                    <img src={Image_path + apiObj.backdrop_path}
+                      alt="" />
+                    <div className="movie-info">
+                      <h3>{apiObj.original_title}</h3>
+                      <span className='green'>{apiObj.vote_average}</span>
+                    </div>
+                    <div className="overview">
+                      <h3>overview</h3>
+                      {apiObj.overview}
+                    </div>
+                  </div>
+                )
+              })
+              :
+              <h1>
+                data is comming
+              </h1>
+            :
+            apiData
+              ?
+              apiData.results.map((apiObj) => {
+              
+                return (
+                  <div className="movie">
+                    <img src={Image_path + apiObj.backdrop_path}
+                      alt="" />
+                    <div className="movie-info">
+                      <h3>{apiObj.original_title}</h3>
+                      <span className={apiObj.vote_average > 7 ? 'green' : apiObj.vote_average > 4 ? "orange" : "red"}>{apiObj.vote_average}</span>
+                    </div>
+                    <div className="overview">
+                      <h3>overview</h3>
+                      {apiObj.overview}
+                    </div>
+                  </div>
+                )
+              })
+              :
+              <h1>
+                data is comming
+              </h1>
+        }
 
-      </div>
-      <div className="action-buttons">
-        <button className="down-button" onClick={()=>changeSlide("down")}  ref={downButton}>
-          <i className="fas fa-arrow-down"></i>
-        </button>
-        <button className="up-button" onClick={()=>changeSlide("up")} ref={upButton}>
-          <i className="fas fa-arrow-up"></i>
-        </button>
-      </div>
 
-    </div>
 
-  );
+      </main>
+    </>
+  )
 }
 
 export default App;
-
